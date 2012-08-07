@@ -78,8 +78,6 @@ moves
     }
 }
 
-
-
 evolutions
 
 {
@@ -88,11 +86,6 @@ evolutions
     "to" : "anotherId",
     "how":  "level 16"
 }
-
-pichu
-evolution_chain is 10
-1. query chain
-
 
 attacks
 
