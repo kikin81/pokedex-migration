@@ -1,5 +1,4 @@
 pokemon
-
 {
    "pokemonId":"someId",
    "metadata":{
@@ -10,10 +9,12 @@ pokemon
       "weight":20,
       "form":"normal",
       "eggCycles":21,
-      "femaleGenderPercent":89,
+      "maleGenderPercent":89,
       "species":"someSpecies",
-      "primaryType":"grass",
-      "secondaryType":"poison",
+      "type":{
+        1: "poison",
+        2: "grass"
+      }
       "attack":44,
       "specialAttack":45,
       "defense":30,
@@ -21,15 +22,42 @@ pokemon
       "speed":45,
       "hp":100,
       "nationalId":"0001",
-      "location" : "game"
+      "location":"game"
    },
-    "moves":{
-     "levelMoves" :["moveId1","moveId2"],
-      "eggMoves" :["someMove1","someMove2"],
-      "hmMoves" : ["move1","move2"],
-      "tmMoves" : ["move9","move10"]
-    }
-
+   "moves":{
+      "levelMoves":{
+         "moveId1":{
+            "name",
+            "level",
+            "type"
+         },
+         "moveId2":{
+            "name",
+            "level",
+            "type"
+         }
+      },
+      "machineMoves":{
+         "moveId":{
+            "name",
+            "machine",
+            "type"
+         }
+      }
+      "tutorMoves":{
+         "moveId":{
+            "name",
+            "tutor",
+            "type"
+         }
+      }
+   }
+   "evolution":{
+      "pkmId":{
+         "name"
+         "method"
+      }
+   }
 }
 
 
