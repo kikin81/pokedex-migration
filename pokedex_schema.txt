@@ -1,0 +1,75 @@
+pokemon
+
+{
+   "pokemonId":"someId",
+   "metadata":{
+      "name":"name",
+      "imageURL":"someUrl",
+      "generation":1,
+      "height":10,
+      "weight":20,
+      "form":"normal",
+      "eggCycles":21,
+      "femaleGenderPercent":89,
+      "species":"someSpecies",
+      "primaryType":"grass",
+      "secondaryType":"poison",
+      "attack":44,
+      "specialAttack":45,
+      "defense":30,
+      "specialDefence":45,
+      "speed":45,
+      "hp":100,
+      "nationalId":"0001",
+      "location" : "game"
+   },
+    "moves":{
+     "levelMoves" :["moveId1","moveId2"],
+      "eggMoves" :["someMove1","someMove2"],
+      "hmMoves" : ["move1","move2"],
+      "tmMoves" : ["move9","move10"]
+    }
+
+}
+
+
+moves
+
+{
+    "moveId" :"someId",
+    "metadata":{
+        "name":"razor-wind"
+        "type":"grass",
+        "category" :"physical",
+        "power":25,
+        "accuracy":95,
+        "pp":25,
+        "maxpp" :40,
+        "introducedInGeneration":1,
+        "description" " little text"
+    }
+}
+
+
+
+evolutions
+
+{
+    "evolutionChainID" : "chainID"
+    "from" : "someOtherId",
+    "to" : "anotherId",
+    "how":  "level 16"
+}
+
+pichu
+evolution_chain is 10
+1. query chain
+
+
+attacks
+
+{
+    "attack":"water",
+    "defense" : "fire",
+    "damage": 1.25
+}

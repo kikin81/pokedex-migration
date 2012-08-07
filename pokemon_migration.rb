@@ -4,12 +4,7 @@ load 'pokemon.rb'
 require 'json'
 require 'mongo'
 
-# instanciate new pokemon
-pkm = Pokemon.new()
-# new db connection
-db = SQLite3::Database.new( "" )
-# new mongo connection
-mongodb = Mongo::Connection.new.db("pokedex")
+Dir = File.expand_path File.dirname(__FILE__)
 
 # set a globalID
 pkmID= "1"
@@ -58,7 +53,7 @@ def pkm_get_jname(pokemonId, db, pkm)
                               INNER JOIN pokemon_species_names ON pokemon_species.id = pokemon_species_names.pokemon_species_id
                             WHERE pokemon.id=#{pokemonId} 
                             AND pokemon_species_names.local_language_id=1")
-    pkm.jname = row
+    pkm.jname = row[0][0]
 end
 
 def pkm_get_stats(pokemonId, db, pkm)
@@ -226,6 +221,7 @@ def pkm_object(pkm)
         #"pokemonId"=>pkm.pokemonId,
         :metadata=>{
             :name=>pkm.name,
+            :jname=>pkm.jname,
             :generation=>pkm.generation,
             :height=>pkm.height,
             :weight=>pkm.weight,
@@ -294,10 +290,13 @@ def my_constructor(pkmID, form, db, pkm, generationID)
 end
 
 def save_to_mongo()
+
     # instanciate new pokemon
     pkm = Pokemon.new()
     # new db connection
-    db = SQLite3::Database.new( "/Users/fvelazquez/Code/pokemondb/resources/pokedex/pokedex/data/pokedex.sqlite" )
+    db = SQLite3::Database.new( Dir+"/pokemon-sqlite/pokedex.sqlite" )
+    # new mongo connection
+    mongodb = Mongo::Connection.new.db("pokedex")
     # new mongo connection
     mongodb = Mongo::Connection.new.db("pokedex")
     coll = mongodb["pokemon"]

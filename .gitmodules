@@ -1,3 +1,3 @@
 [submodule "pokemon-sqlite"]
 	path = pokemon-sqlite
-	url = git@github.com:kikin81/pokemon-sqlite.git
+	url = git:https://github.com/kikin81/pokemon-sqlite.git
