@@ -297,8 +297,6 @@ def save_to_mongo()
     db = SQLite3::Database.new( Dir+"/pokemon-sqlite/pokedex.sqlite" )
     # new mongo connection
     mongodb = Mongo::Connection.new.db("pokedex")
-    # new mongo connection
-    mongodb = Mongo::Connection.new.db("pokedex")
     coll = mongodb["pokemon"]
     generationID=1
     form="1"
