@@ -71,7 +71,9 @@ def save_to_mongo()
     # new mongo connection
     mongodb = Mongo::Connection.new.db("pokedex")
     coll = mongodb["moves"]
+    coll.remove
     move_metadata(db, move, coll)
+    puts "Total documents #{coll.count}"
 end
 
 def move_object(move)

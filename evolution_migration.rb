@@ -12,6 +12,7 @@ db = SQLite3::Database.new( Dir+"/pokemon-sqlite/pokedex.sqlite" )
 def crazy_evolution_method(evolution, db)
     mongodb = Mongo::Connection.new.db("pokedex")
     coll = mongodb["evolution"]
+    coll.remove
     db.results_as_hash = true
     db.execute("SELECT pokemon_species.evolves_from_species_id, pokemon_species.evolution_chain_id, pokemon_evolution.*
                 FROM pokemon INNER JOIN pokemon_species ON pokemon.species_id = pokemon_species.id
@@ -25,6 +26,7 @@ def crazy_evolution_method(evolution, db)
             puts "inserting from #{evolution.from} to #{evolution.to}"
             id = coll.insert(doc)
         end
+    puts "Total documents #{coll.count}"
 end
 
 def get_item_name(itemId, db)
