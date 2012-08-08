@@ -297,9 +297,8 @@ def save_to_mongo()
     db = SQLite3::Database.new( Dir+"/pokemon-sqlite/pokedex.sqlite" )
     # new mongo connection
     mongodb = Mongo::Connection.new.db("pokedex")
-    # new mongo connection
-    mongodb = Mongo::Connection.new.db("pokedex")
     coll = mongodb["pokemon"]
+    coll.remove
     generationID=1
     form="1"
     for i in 1..5 do
@@ -313,6 +312,7 @@ def save_to_mongo()
             id = coll.insert(doc)
         end
     end
+    puts "Total documents saved. #{coll.count}"
 end
 
 save_to_mongo()
