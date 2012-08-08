@@ -2,11 +2,7 @@ load 'move.rb'
 require 'sqlite3'
 require 'mongo'
 
-Dir = File.expand_path File.dirname(__FILE__)
-db = SQLite3::Database.new( Dir+"/pokemon-sqlite/pokedex.sqlite" )
-move = Move.new()
-
-def move_metadata(db, move)
+def move_metadata(db, move, coll)
     mongodb = Mongo::Connection.new.db("pokedex")
     coll = mongodb["moves"]
     db.results_as_hash = true
@@ -14,7 +10,8 @@ def move_metadata(db, move)
                     types.identifier AS type, move_damage_classes.identifier AS category, 
                     moves.power, moves.accuracy, moves.pp
                 FROM moves INNER JOIN move_damage_classes ON moves.damage_class_id = move_damage_classes.id
-                     INNER JOIN types ON moves.type_id = types.id") do |row|
+                     INNER JOIN types ON moves.type_id = types.id
+                WHERE moves.id < 10000") do |row|
             move.move_id = row['id']
             move.name = row['move_name']
             move.type=row['type']
@@ -23,7 +20,10 @@ def move_metadata(db, move)
             move.accuracy=row['accuracy']
             move.pp=row['pp']
             move.description=move_description(move, row, db)
-            puts move.inspect
+            doc = move_object(move)
+            puts doc.inspect
+            puts "inserting #{move.name}"
+            id = coll.insert(doc)
         end
 end
 
@@ -62,4 +62,33 @@ def move_description(move, row, db)
     move.description = moveDescription
 end
 
-move_metadata(db, move)
+def save_to_mongo()
+    # instanciate new move object
+    move = Move.new()
+    # new db connection
+    dir = File.expand_path File.dirname(__FILE__)
+    db = SQLite3::Database.new( dir+"/pokemon-sqlite/pokedex.sqlite" )
+    # new mongo connection
+    mongodb = Mongo::Connection.new.db("pokedex")
+    coll = mongodb["moves"]
+    move_metadata(db, move, coll)
+end
+
+def move_object(move)
+    move = {
+        :moveId=> move.move_id,
+        :metadata=>{
+            :name=>move.name,
+            :type=>move.type,
+            :category=>move.category,
+            :power=>move.power,
+            :accuracy=>move.accuracy,
+            :pp=>move.pp,
+            :description=>move.description
+        }
+    }
+
+    return move
+end
+
+save_to_mongo()
