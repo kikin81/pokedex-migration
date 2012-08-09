@@ -32,8 +32,8 @@ def pkm_get_height_weight(pokemonId, db, pkm)
     db.execute( "SELECT height, weight 
                  FROM pokemon
                  WHERE id = #{pokemonId}") do |row|
-        pkm.height = row['height']
-        pkm.weight = row['weight']
+        pkm.height = row['height']/10.0
+        pkm.weight = row['weight']/10.0
         
     end
 end
@@ -53,7 +53,6 @@ def pkm_get_jname(pokemonId, db, pkm)
                               INNER JOIN pokemon_species_names ON pokemon_species.id = pokemon_species_names.pokemon_species_id
                             WHERE pokemon.id=#{pokemonId} 
                             AND pokemon_species_names.local_language_id=1")
-    puts "japanese name: #{pokemon_jname}"
     pkm.jname = pokemon_jname.downcase
 end
 
@@ -61,7 +60,6 @@ def pkm_get_evolution_chain(pokemonId, db, pkm)
     pokemon_evolution = db.get_first_value("SELECT pokemon_species.evolution_chain_id
                             FROM pokemon INNER JOIN pokemon_species ON pokemon.species_id = pokemon_species.id
                             WHERE pokemon.id = #{pokemonId}")
-    puts "evolution chain id #{pokemon_evolution}"
     pkm.evolution_chain = pokemon_evolution
 end
 
@@ -378,7 +376,51 @@ def save_to_mongo()
             pkmID="#{i}"
             my_constructor(pkmID, form, db, pkm, generationID)
             doc = pkm_object(pkm)
-            puts "inserting #{pkm.name}"
+            puts "inserting #{pkm.national_id} #{pkm.name} #{pkm.jname}"
+            id = coll.insert(doc)
+        end
+    end
+    for i in 2..5 do
+        generationID=i
+        pkm.generation = generationID
+        for i in 152..251 do
+            pkmID="#{i}"
+            my_constructor(pkmID, form, db, pkm, generationID)
+            doc = pkm_object(pkm)
+            puts "inserting #{pkm.national_id} #{pkm.name} #{pkm.jname}"
+            id = coll.insert(doc)
+        end
+    end
+    for i in 3..5 do
+        generationID=i
+        pkm.generation = generationID
+        for i in 252..386 do
+            pkmID="#{i}"
+            my_constructor(pkmID, form, db, pkm, generationID)
+            doc = pkm_object(pkm)
+            puts "inserting #{pkm.national_id} #{pkm.name} #{pkm.jname}"
+            id = coll.insert(doc)
+        end
+    end
+    for i in 4..5 do
+        generationID=i
+        pkm.generation = generationID
+        for i in 387..493 do
+            pkmID="#{i}"
+            my_constructor(pkmID, form, db, pkm, generationID)
+            doc = pkm_object(pkm)
+            puts "inserting #{pkm.national_id} #{pkm.name} #{pkm.jname}"
+            id = coll.insert(doc)
+        end
+    end
+    for i in 5..5 do
+        generationID=i
+        pkm.generation = generationID
+        for i in 494..649 do
+            pkmID="#{i}"
+            my_constructor(pkmID, form, db, pkm, generationID)
+            doc = pkm_object(pkm)
+            puts "inserting #{pkm.national_id} #{pkm.name} #{pkm.jname}"
             id = coll.insert(doc)
         end
     end
