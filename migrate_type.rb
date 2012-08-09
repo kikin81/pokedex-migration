@@ -31,7 +31,7 @@ def crazy_type_method(type, db)
             print jump + "inserting type record #{type.current_type} against #{type.opposed_type} -> #{type.damage_factor}"
             id = coll.insert(doc)
         end
-    puts "Total documents saved to type collection => #{coll.count}"
+    puts "\n\tTotal documents saved to type collection => #{coll.count}"
 end
 
 def get_type_name(typeId, db)

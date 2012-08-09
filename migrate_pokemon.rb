@@ -424,7 +424,7 @@ def save_to_mongo()
             id = coll.insert(doc)
         end
     end
-    puts "Total documents saved to pokemon collection => #{coll.count}"
+    puts "\n\tTotal documents saved to pokemon collection => #{coll.count}"
 end
 
 save_to_mongo()
