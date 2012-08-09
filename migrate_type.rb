@@ -4,15 +4,16 @@ load 'type.rb'
 require 'json'
 require 'mongo'
 
-Dir = File.expand_path File.dirname(__FILE__)
+dir = File.expand_path File.dirname(__FILE__)
 
 type = Type.new()
 
-db = SQLite3::Database.new( Dir+"/pokemon-sqlite/pokedex.sqlite" )
+db = SQLite3::Database.new( dir+"/pokemon-sqlite/pokedex.sqlite" )
 
 
 
 def crazy_type_method(type, db)
+    jump = "\r\e[0K"
     mongodb = Mongo::Connection.new.db("pokedex")
     coll = mongodb["type"]
     coll.remove
@@ -27,9 +28,10 @@ def crazy_type_method(type, db)
             type.opposed_type = get_type_name(row['target_type_id'], db)
             type.damage_factor = row['damage_factor']
             doc = type_object(type)
-            puts "inserting type record #{type.current_type} against #{type.opposed_type} -> #{type.damage_factor}"
+            print jump + "inserting type record #{type.current_type} against #{type.opposed_type} -> #{type.damage_factor}"
             id = coll.insert(doc)
         end
+    puts "Total documents saved to type collection => #{coll.count}"
 end
 
 def get_type_name(typeId, db)

@@ -3,6 +3,7 @@ require 'sqlite3'
 require 'mongo'
 
 def move_metadata(db, move, coll)
+    jump = "\r\e[0K"
     mongodb = Mongo::Connection.new.db("pokedex")
     coll = mongodb["moves"]
     coll.remove
@@ -22,8 +23,7 @@ def move_metadata(db, move, coll)
             move.pp=row['pp']
             move.description=move_description(move, row, db)
             doc = move_object(move)
-            puts doc.inspect
-            puts "inserting #{move.name}"
+            print jump + "inserting #{move.name}"
             id = coll.insert(doc)
         end
 end
@@ -74,7 +74,7 @@ def save_to_mongo()
     coll = mongodb["moves"]
     coll.remove
     move_metadata(db, move, coll)
-    puts "Total documents #{coll.count}"
+    puts "\n\tTotal documents saved to move collection => #{coll.count}"
 end
 
 def move_object(move)

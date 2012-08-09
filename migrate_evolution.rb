@@ -3,13 +3,14 @@ require 'sqlite3'
 require 'json'
 require 'mongo'
 
-Dir = File.expand_path File.dirname(__FILE__)
+dir = File.expand_path File.dirname(__FILE__)
 
 evolution = Evolution.new()
 
-db = SQLite3::Database.new( Dir+"/pokemon-sqlite/pokedex.sqlite" )
+db = SQLite3::Database.new( dir+"/pokemon-sqlite/pokedex.sqlite" )
 
 def crazy_evolution_method(evolution, db)
+    jump = "\r\e[0K"
     mongodb = Mongo::Connection.new.db("pokedex")
     coll = mongodb["evolution"]
     coll.remove
@@ -23,10 +24,10 @@ def crazy_evolution_method(evolution, db)
             evolution.to = row['evolved_species_id']
             evolution.how = crazy_how_method(evolution, row, db)
             doc = evolution_object(evolution)
-            puts "inserting from #{evolution.from} to #{evolution.to}"
+            print jump + "inserting from #{evolution.from} to #{evolution.to}"
             id = coll.insert(doc)
         end
-    puts "Total documents #{coll.count}"
+    puts "\n\tTotal documents saved to evolution collection => #{coll.count}"
 end
 
 def get_item_name(itemId, db)

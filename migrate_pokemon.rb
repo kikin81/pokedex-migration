@@ -4,8 +4,6 @@ load 'pokemon.rb'
 require 'json'
 require 'mongo'
 
-Dir = File.expand_path File.dirname(__FILE__)
-
 # set a globalID
 pkmID= "1"
 generationID="5"
@@ -358,11 +356,13 @@ def my_constructor(pkmID, form, db, pkm, generationID)
 end
 
 def save_to_mongo()
-
+    dir = File.expand_path File.dirname(__FILE__)
+    jump = "\r\e[0K"    # That is return to beginning of line and use the
+                        # ANSI clear command "\e" or "\003"
     # instanciate new pokemon
     pkm = Pokemon.new()
     # new db connection
-    db = SQLite3::Database.new( Dir+"/pokemon-sqlite/pokedex.sqlite" )
+    db = SQLite3::Database.new( dir+"/pokemon-sqlite/pokedex.sqlite" )
     # new mongo connection
     mongodb = Mongo::Connection.new.db("pokedex")
     coll = mongodb["pokemon"]
@@ -376,7 +376,7 @@ def save_to_mongo()
             pkmID="#{i}"
             my_constructor(pkmID, form, db, pkm, generationID)
             doc = pkm_object(pkm)
-            puts "inserting #{pkm.national_id} #{pkm.name} #{pkm.jname}"
+            print jump + "inserting #{pkm.national_id} #{pkm.name} #{pkm.jname}"
             id = coll.insert(doc)
         end
     end
@@ -387,7 +387,7 @@ def save_to_mongo()
             pkmID="#{i}"
             my_constructor(pkmID, form, db, pkm, generationID)
             doc = pkm_object(pkm)
-            puts "inserting #{pkm.national_id} #{pkm.name} #{pkm.jname}"
+            print jump + "inserting #{pkm.national_id} #{pkm.name} #{pkm.jname}"
             id = coll.insert(doc)
         end
     end
@@ -398,7 +398,7 @@ def save_to_mongo()
             pkmID="#{i}"
             my_constructor(pkmID, form, db, pkm, generationID)
             doc = pkm_object(pkm)
-            puts "inserting #{pkm.national_id} #{pkm.name} #{pkm.jname}"
+            print jump + "inserting #{pkm.national_id} #{pkm.name} #{pkm.jname}"
             id = coll.insert(doc)
         end
     end
@@ -409,7 +409,7 @@ def save_to_mongo()
             pkmID="#{i}"
             my_constructor(pkmID, form, db, pkm, generationID)
             doc = pkm_object(pkm)
-            puts "inserting #{pkm.national_id} #{pkm.name} #{pkm.jname}"
+            print jump + "inserting #{pkm.national_id} #{pkm.name} #{pkm.jname}"
             id = coll.insert(doc)
         end
     end
@@ -420,11 +420,11 @@ def save_to_mongo()
             pkmID="#{i}"
             my_constructor(pkmID, form, db, pkm, generationID)
             doc = pkm_object(pkm)
-            puts "inserting #{pkm.national_id} #{pkm.name} #{pkm.jname}"
+            print jump + "inserting #{pkm.national_id} #{pkm.name} #{pkm.jname}"
             id = coll.insert(doc)
         end
     end
-    puts "Total documents saved. #{coll.count}"
+    puts "Total documents saved to pokemon collection => #{coll.count}"
 end
 
 save_to_mongo()
