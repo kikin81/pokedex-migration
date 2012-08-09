@@ -5,6 +5,7 @@ require 'mongo'
 def move_metadata(db, move, coll)
     mongodb = Mongo::Connection.new.db("pokedex")
     coll = mongodb["moves"]
+    coll.remove
     db.results_as_hash = true
     db.execute("SELECT DISTINCT moves.id, moves.identifier AS move_name, 
                     types.identifier AS type, move_damage_classes.identifier AS category, 

@@ -15,6 +15,7 @@ db = SQLite3::Database.new( Dir+"/pokemon-sqlite/pokedex.sqlite" )
 def crazy_type_method(type, db)
     mongodb = Mongo::Connection.new.db("pokedex")
     coll = mongodb["type"]
+    coll.remove
     db.results_as_hash = true
     db.execute("SELECT type_efficacy.damage_type_id, 
 				type_efficacy.target_type_id, 
