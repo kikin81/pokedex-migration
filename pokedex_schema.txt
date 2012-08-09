@@ -12,7 +12,7 @@ pokemon
       "maleGenderPercent":89,
       "species":"someSpecies",
       "type":{
-        1: "poison",
+        1: {"poison",
         2: "grass"
       }
       "attack":44,
@@ -37,12 +37,19 @@ pokemon
             "type"
          }
       },
-      "machineMoves":{
-         "moveId":{
-            "name",
-            "machine",
-            "type"
-         }
+      "hmMoves":{
+        "moveId":{
+          "number",
+          "name",
+          "type"
+        }
+      },
+      "tmMoves":{
+        "moveId":{
+          "number",
+          "name",
+          "type"
+        },
       }
       "tutorMoves":{
          "moveId":{

@@ -14,12 +14,14 @@ class Pokemon
                   :ability,
                   :species,
                   :level_moves,
-                  :machine_moves,
+                  :hm_moves,
+                  :tm_moves,
+                  :tutor_moves,
                   :ev_yield,
                   :female_rate,
                   :generation,
                   :form,
                   :egg_cycles,
                   :dex_description,
-                  :evolutionChain
+                  :evolution_chain
 end

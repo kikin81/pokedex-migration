@@ -39,21 +39,30 @@ def pkm_get_height_weight(pokemonId, db, pkm)
 end
 
 def pkm_get_name(pokemonId, db, pkm)
-    row = db.get_first_value("SELECT pokemon_species_names.name
+    pokemon_name = db.get_first_value("SELECT pokemon_species_names.name
                             FROM pokemon INNER JOIN pokemon_species_names ON pokemon.species_id = pokemon_species_names.pokemon_species_id
                             WHERE pokemon_species_names.local_language_id = 9
                             AND pokemon.species_id = #{pokemonId}")
     # if we have a result
-    pkm.name = row.downcase
+    pkm.name = pokemon_name.downcase
 end
 
 def pkm_get_jname(pokemonId, db, pkm)
-    row = db.get_first_value("SELECT pokemon_species_names.name
+    pokemon_jname = db.get_first_value("SELECT pokemon_species_names.name
                             FROM pokemon INNER JOIN pokemon_species ON pokemon.species_id = pokemon_species.id
                               INNER JOIN pokemon_species_names ON pokemon_species.id = pokemon_species_names.pokemon_species_id
                             WHERE pokemon.id=#{pokemonId} 
                             AND pokemon_species_names.local_language_id=1")
-    pkm.jname = row[0][0]
+    puts "japanese name: #{pokemon_jname}"
+    pkm.jname = pokemon_jname.downcase
+end
+
+def pkm_get_evolution_chain(pokemonId, db, pkm)
+    pokemon_evolution = db.get_first_value("SELECT pokemon_species.evolution_chain_id
+                            FROM pokemon INNER JOIN pokemon_species ON pokemon.species_id = pokemon_species.id
+                            WHERE pokemon.id = #{pokemonId}")
+    puts "evolution chain id #{pokemon_evolution}"
+    pkm.evolution_chain = pokemon_evolution
 end
 
 def pkm_get_stats(pokemonId, db, pkm)
@@ -179,8 +188,8 @@ def pkm_get_evyield(pokemonId, db, pkm)
     pkm.ev_yield = evYield
 end
 
-def pkm_get_machine_moves(pokemonId, generationId, db, pkm)
-    machineMoves = Hash.new{|h, k| h[k] = []}
+def pkm_get_hm_moves(pokemonId, generationId, db, pkm)
+    hm_moves = Hash.new{|h, k| h[k] = []}
     db.results_as_hash = true
     db.execute("SELECT DISTINCT pokemon_moves.move_id, items.identifier AS machine_name, moves.identifier AS move_name, 
                 types.identifier AS type
@@ -196,16 +205,72 @@ def pkm_get_machine_moves(pokemonId, generationId, db, pkm)
             WHERE pokemon.id = #{pokemonId}
             AND pokemon_move_methods.id = 4
             AND generations.id = #{generationId}
-            AND move_names.local_language_id = 9") do |row|
+            AND move_names.local_language_id = 9
+            AND machine_name LIKE \"hm%\"") do |row|
                 moveId = row['move_id']
-                machineNumber = row['machine_name']
+                machineNumber = row['machine_name'].slice(2..-1)
                 name = row["move_name"]
                 type = row["type"]
-                machineMoves["#{moveId}"] << machineNumber
-                machineMoves["#{moveId}"] << name
-                machineMoves["#{moveId}"] << type
+                hm_moves["#{moveId}"] << machineNumber
+                hm_moves["#{moveId}"] << name
+                hm_moves["#{moveId}"] << type
             end
-    pkm.machine_moves=machineMoves
+    pkm.hm_moves=hm_moves
+end
+
+def pkm_get_tm_moves(pokemonId, generationId, db, pkm)
+    tm_moves = Hash.new{|h, k| h[k] = []}
+    db.results_as_hash = true
+    db.execute("SELECT DISTINCT pokemon_moves.move_id, items.identifier AS machine_name, moves.identifier AS move_name, 
+                types.identifier AS type
+            FROM pokemon INNER JOIN pokemon_moves ON pokemon.id = pokemon_moves.pokemon_id
+                 INNER JOIN moves ON pokemon_moves.move_id = moves.id
+                 INNER JOIN types ON moves.type_id = types.id
+                 INNER JOIN machines ON pokemon_moves.move_id = machines.move_id
+                 INNER JOIN items ON machines.item_id = items.id
+                 INNER JOIN move_names ON pokemon_moves.move_id = move_names.move_id
+                 INNER JOIN version_groups ON pokemon_moves.version_group_id = version_groups.id
+                 INNER JOIN generations ON version_groups.generation_id = generations.id
+                 INNER JOIN pokemon_move_methods ON pokemon_moves.pokemon_move_method_id = pokemon_move_methods.id AND machines.version_group_id = version_groups.id
+            WHERE pokemon.id = #{pokemonId}
+            AND pokemon_move_methods.id = 4
+            AND generations.id = #{generationId}
+            AND move_names.local_language_id = 9
+            AND machine_name LIKE \"tm%\"") do |row|
+                moveId = row['move_id']
+                machineNumber = row['machine_name'].slice(2..-1)
+                name = row["move_name"]
+                type = row["type"]
+                tm_moves["#{moveId}"] << machineNumber
+                tm_moves["#{moveId}"] << name
+                tm_moves["#{moveId}"] << type
+            end
+    pkm.tm_moves=tm_moves
+end
+
+def pkm_get_tutor_moves(pokemonId, generationId, db, pkm)
+    tutor_moves = Hash.new{|h, k| h[k] = []}
+    db.results_as_hash = true
+    db.execute("SELECT DISTINCT pokemon_moves.move_id, moves.identifier AS move_name, types.identifier AS move_type
+                FROM pokemon INNER JOIN pokemon_moves ON pokemon.id = pokemon_moves.pokemon_id
+                     INNER JOIN moves ON pokemon_moves.move_id = moves.id
+                     INNER JOIN types ON moves.type_id = types.id
+                     INNER JOIN version_groups ON version_groups.id = pokemon_moves.version_group_id
+                     INNER JOIN generations ON version_groups.generation_id = generations.id
+                     INNER JOIN pokemon_move_methods ON pokemon_moves.pokemon_move_method_id = pokemon_move_methods.id
+                     INNER JOIN pokemon_species_names ON pokemon.species_id = pokemon_species_names.pokemon_species_id
+                WHERE pokemon_move_method_id = 3
+                AND generations.id =#{generationId}
+                AND pokemon_species_names.local_language_id = 9
+                AND pokemon.id = #{pokemonId}
+                ORDER BY move_name") do |row|
+                moveId = row['move_id']
+                name = row["move_name"]
+                type = row["move_type"]
+                tutor_moves["#{moveId}"] << name
+                tutor_moves["#{moveId}"] << type
+            end
+    pkm.tutor_moves=tutor_moves
 end
 
 def pkm_get_gender(pokemonId, db, pkm)
@@ -240,16 +305,17 @@ def pkm_object(pkm)
             :speed=>pkm.speed,
             :nationalId=>pkm.national_id,
             # we don't want chain if they don't evolve
-            :evolutionChain=>pkm.evolutionChain,
+            :evolutionChain=>pkm.evolution_chain,
             :dex_description=>pkm.dex_description
             
         },
         :moves=>{
             :levelMoves=>pkm.level_moves,
-            :machineMoves=>pkm.machine_moves
+            :hmMoves=>pkm.hm_moves,
+            :tmMoves=>pkm.tm_moves,
+            :tutor_moves=>pkm.tutor_moves
         }
     }
-    # puts JSON.pretty_generate(pokemon)
     return pokemon
     
 end
@@ -276,12 +342,16 @@ def my_constructor(pkmID, form, db, pkm, generationID)
     pkm_get_national_id(pkmID, db, pkm)
     pkm_get_height_weight(pkmID, db, pkm)   # Height/Weight
     pkm_get_name(pkmID, db, pkm)            # Name
+    pkm_get_jname(pkmID, db, pkm)           # JName
     pkm_get_stats(pkmID, db, pkm)           # Stats
     pkm_get_type(pkmID, db, pkm)            # Type
     pkm_get_ability(pkmID, db, pkm)         # Ability
     pkm_get_species(pkmID, db, pkm)         # Species
     pkm_get_level_moves_by_generation(pkmID, generationID, db, pkm) # Level Moves
-    pkm_get_machine_moves(pkmID, generationID, db, pkm)             # Machine Moves
+    pkm_get_hm_moves(pkmID, generationID, db, pkm)              # HM Moves
+    pkm_get_tm_moves(pkmID, generationID, db, pkm)              # TM Moves
+    pkm_get_tutor_moves(pkmID, generationID, db, pkm)           # Tutor Moves
+    pkm_get_evolution_chain(pkmID, db, pkm)                 # Evolution Chain
     pkm_get_evyield(pkmID, db, pkm)         # EV Yield
     pkm_get_gender(pkmID, db, pkm)          # Gender
     pkm_get_egg_cycles(pkmID, db, pkm)      # Egg Cycles
