@@ -12,7 +12,7 @@ db = SQLite3::Database.new( dir+"/pokemon-sqlite/pokedex.sqlite" )
 def crazy_evolution_method(evolution, db)
     jump = "\r\e[0K"
     mongodb = Mongo::Connection.new.db("pokedex")
-    coll = mongodb["evolution"]
+    coll = mongodb["evolutions"]
     coll.remove
     db.results_as_hash = true
     db.execute("SELECT pokemon_species.evolves_from_species_id, pokemon_species.evolution_chain_id, pokemon_evolution.*
