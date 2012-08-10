@@ -301,10 +301,10 @@ def pkm_object(pkm)
             :speed=>pkm.speed,
             :nationalId=>pkm.national_id,
             # we don't want chain if they don't evolve
-            :evolutionChain=>pkm.evolution_chain,
             :dex_description=>pkm.dex_description
             
         },
+        :evolutionChain=>pkm.evolution_chain,
         :moves=>{
             :levelMoves=>pkm.level_moves,
             :hmMoves=>pkm.hm_moves,
