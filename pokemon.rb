@@ -1,6 +1,7 @@
 class Pokemon
     attr_accessor :name,
                   :jname,
+                  :slug,
                   :weight,
                   :height,
                   :national_id,

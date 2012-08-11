@@ -25,6 +25,21 @@ def pkm_get_national_id(pokemonId, db, pkm)
     pkm.national_id = row
 end
 
+def pkm_get_egg_group(pokemonId, db, pkm)
+    x = 0
+    pkm.egg_group = Hash.new
+    db.results_as_hash = true
+    db.execute("SELECT pokemon.id, egg_group_prose.name
+                FROM pokemon INNER JOIN pokemon_egg_groups ON pokemon.species_id = pokemon_egg_groups.species_id
+                     INNER JOIN egg_group_prose ON pokemon_egg_groups.egg_group_id = egg_group_prose.egg_group_id
+                WHERE egg_group_prose.local_language_id = 9
+                AND pokemon.id = #{pokemonId}
+                order by name") do |row|
+            pkm.egg_group["#{x}"] = row['name'].downcase
+            x +=1
+        end
+end
+
 def pkm_get_height_weight(pokemonId, db, pkm)
     db.results_as_hash = true
     db.execute( "SELECT height, weight 
@@ -42,7 +57,18 @@ def pkm_get_name(pokemonId, db, pkm)
                             WHERE pokemon_species_names.local_language_id = 9
                             AND pokemon.species_id = #{pokemonId}")
     # if we have a result
-    pkm.name = pokemon_name.downcase
+    pkm.name = pokemon_name
+end
+
+def pkm_slug(pkm)
+    case pkm.national_id
+    when 29
+        pkm.slug = 'nidoran-f'
+    when 32
+        pkm.slug = 'nidoran-m'
+    else
+        pkm.slug = pkm.name.downcase.strip.gsub(' ', '-').gsub(/[^\w-]/, '')
+    end
 end
 
 def pkm_get_jname(pokemonId, db, pkm)
@@ -280,6 +306,7 @@ end
 def pkm_object(pkm)
     pokemon = {
         #"pokemonId"=>pkm.pokemonId,
+        :slug=>pkm.slug,
         :metadata=>{
             :name=>pkm.name,
             :jname=>pkm.jname,
@@ -290,6 +317,7 @@ def pkm_object(pkm)
             # multiple forms
             :form=>pkm.form,
             :eggCycles=>pkm.egg_cycles,
+            :eggGroup=>pkm.egg_group,
             :femaleGenderPercent=>pkm.female_rate,
             :species=>pkm.species,
             :type=>pkm.type,
@@ -335,9 +363,11 @@ end
 def my_constructor(pkmID, form, db, pkm, generationID)
 
     pkm_set_id(pkmID,form, db, pkm)         # ID
-    pkm_get_national_id(pkmID, db, pkm)
+    pkm_get_national_id(pkmID, db, pkm)     # national id
+    pkm_get_egg_group(pkmID, db, pkm)       # egg group
     pkm_get_height_weight(pkmID, db, pkm)   # Height/Weight
     pkm_get_name(pkmID, db, pkm)            # Name
+    pkm_slug(pkm)                           # slug
     pkm_get_jname(pkmID, db, pkm)           # JName
     pkm_get_stats(pkmID, db, pkm)           # Stats
     pkm_get_type(pkmID, db, pkm)            # Type
