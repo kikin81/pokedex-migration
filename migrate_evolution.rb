@@ -21,6 +21,8 @@ def crazy_evolution_method(evolution, db)
                      INNER JOIN evolution_triggers ON pokemon_evolution.evolution_trigger_id = evolution_triggers.id") do |row|
             evolution.evolutionChain = row['evolution_chain_id']
             evolution.from = row['evolves_from_species_id']
+            evolution.from_name = pkm_get_name(row['evolves_from_species_id'], db)
+            evolution.to_name = pkm_get_name(row['evolved_species_id'], db)
             evolution.to = row['evolved_species_id']
             evolution.how = crazy_how_method(evolution, row, db)
             doc = evolution_object(evolution)
@@ -28,6 +30,15 @@ def crazy_evolution_method(evolution, db)
             id = coll.insert(doc)
         end
     puts "\n\tTotal documents saved to evolution collection => #{coll.count}"
+end
+
+def pkm_get_name(pokemonId, db)
+    pokemon_name = db.get_first_value("SELECT pokemon_species_names.name
+                            FROM pokemon INNER JOIN pokemon_species_names ON pokemon.species_id = pokemon_species_names.pokemon_species_id
+                            WHERE pokemon_species_names.local_language_id = 9
+                            AND pokemon.species_id = #{pokemonId}")
+    # if we have a result
+    return pokemon_name.downcase
 end
 
 def get_item_name(itemId, db)
@@ -162,7 +173,9 @@ def evolution_object(evolution)
     evolution = {
         :evolutionChain=>evolution.evolutionChain,
         :from=>evolution.from,
+        :fromName=>evolution.from_name,
         :to=>evolution.to,
+        :toName=>evolution.to_name,
         :how=>evolution.how
     }
     return evolution
