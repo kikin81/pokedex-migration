@@ -81,7 +81,7 @@ def crazy_how_method(evolution, row, db)
     when 3
         evolution_method += "Use"
     when 4
-        evolution_method += "Shedinja sucks"
+        evolution_method += "Level up 20, with empty spot in party"
     end
 
     # By Item
