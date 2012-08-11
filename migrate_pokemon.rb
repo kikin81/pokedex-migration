@@ -376,7 +376,7 @@ def save_to_mongo()
             pkmID="#{i}"
             my_constructor(pkmID, form, db, pkm, generationID)
             doc = pkm_object(pkm)
-            print jump + "inserting #{pkm.national_id} #{pkm.name} #{pkm.jname}"
+            print jump + "inserting Generation #{generationID} #{pkm.national_id} #{pkm.name} #{pkm.jname}"
             id = coll.insert(doc)
         end
     end
@@ -387,7 +387,7 @@ def save_to_mongo()
             pkmID="#{i}"
             my_constructor(pkmID, form, db, pkm, generationID)
             doc = pkm_object(pkm)
-            print jump + "inserting #{pkm.national_id} #{pkm.name} #{pkm.jname}"
+            print jump + "inserting Generation #{generationID} #{pkm.national_id} #{pkm.name} #{pkm.jname}"
             id = coll.insert(doc)
         end
     end
@@ -398,7 +398,7 @@ def save_to_mongo()
             pkmID="#{i}"
             my_constructor(pkmID, form, db, pkm, generationID)
             doc = pkm_object(pkm)
-            print jump + "inserting #{pkm.national_id} #{pkm.name} #{pkm.jname}"
+            print jump + "inserting Generation #{generationID} #{pkm.national_id} #{pkm.name} #{pkm.jname}"
             id = coll.insert(doc)
         end
     end
@@ -409,7 +409,7 @@ def save_to_mongo()
             pkmID="#{i}"
             my_constructor(pkmID, form, db, pkm, generationID)
             doc = pkm_object(pkm)
-            print jump + "inserting #{pkm.national_id} #{pkm.name} #{pkm.jname}"
+            print jump + "inserting Generation #{generationID} #{pkm.national_id} #{pkm.name} #{pkm.jname}"
             id = coll.insert(doc)
         end
     end
@@ -420,7 +420,7 @@ def save_to_mongo()
             pkmID="#{i}"
             my_constructor(pkmID, form, db, pkm, generationID)
             doc = pkm_object(pkm)
-            print jump + "inserting #{pkm.national_id} #{pkm.name} #{pkm.jname}"
+            print jump + "inserting Generation #{generationID} #{pkm.national_id} #{pkm.name} #{pkm.jname}"
             id = coll.insert(doc)
         end
     end
