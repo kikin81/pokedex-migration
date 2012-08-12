@@ -17,9 +17,14 @@ Download the sqlite database (25 mb) run
 
 3. gem dependencies
 	Mongo
+
         $ gem update --system
+
         $ gem install mongo
+
         $ gem install bson_ext
+
 	Sqlite3
+    
         $ gem install sqlite3
 	
