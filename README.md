@@ -16,6 +16,7 @@ Download the sqlite database (25 mb) run
         $ git submodule update
 
 3. gem dependencies
+
 	Mongo
 
         $ gem update --system
@@ -25,6 +26,6 @@ Download the sqlite database (25 mb) run
         $ gem install bson_ext
 
 	Sqlite3
-    
+
         $ gem install sqlite3
 	
