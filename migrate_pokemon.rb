@@ -325,7 +325,7 @@ def pkm_object(pkm)
             :attack=>pkm.attack,
             :defense=>pkm.defense,
             :specialAttack=>pkm.special_attack,
-            :specialDefence=>pkm.special_defense,
+            :specialDefense=>pkm.special_defense,
             :speed=>pkm.speed,
             :nationalId=>pkm.national_id,
             # we don't want chain if they don't evolve
