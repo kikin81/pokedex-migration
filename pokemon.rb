@@ -25,5 +25,6 @@ class Pokemon
                   :egg_cycles,
                   :dex_description,
                   :evolution_chain,
-                  :egg_group
+                  :egg_group,
+                  :location
 end

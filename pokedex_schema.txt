@@ -22,7 +22,12 @@ pokemon
       "speed":45,
       "hp":100,
       "nationalId":"0001",
-      "location":"game"
+      "location":{
+        "black": "location",
+        "white": "location",
+        "black2": "location",
+        "white2": "location"
+      }
    },
    "moves":{
       "levelMoves":{

@@ -3,11 +3,7 @@ require 'sqlite3'
 load 'pokemon.rb'
 require 'json'
 require 'mongo'
-
-# set a globalID
-pkmID= "1"
-generationID="5"
-form="1"
+require 'csv'
 
 def pkm_set_id(pokemonId, form, db, pkm)
     # nationalID + form + generation
@@ -332,8 +328,8 @@ def pkm_object(pkm)
             :specialDefense=>pkm.special_defense,
             :speed=>pkm.speed,
             # we don't want chain if they don't evolve
-            :dex_description=>pkm.dex_description
-            
+            :dex_description=>pkm.dex_description,
+            :location=>pkm.location
         },
         :evolutionChain=>pkm.evolution_chain,
         :moves=>{
@@ -363,7 +359,21 @@ def pkm_get_form(pokemonId, db, pkm)
         end
 end
 
-def my_constructor(pkmID, form, db, pkm, generationID)
+def pkm_get_location(pokemonId, gen5_locations, generationId, db, pkm)
+    location = Hash.new
+    if(generationId == 5)
+        # National Dex #,Location Black,Location White,Location Black 2,Location White 2
+        location["black"] = gen5_locations[pokemonId][1]
+        location["white"] = gen5_locations[pokemonId][2]
+        location["black2"] = gen5_locations[pokemonId][3]
+        location["white2"] = gen5_locations[pokemonId][4]
+    else
+        # pkm_get_veekun_location(pokemonId, generationId, db, pkm)
+    end
+    pkm.location = location
+end
+
+def my_constructor(pkmID, form, db, pkm, generationID, gen5_locations)
 
     pkm_set_id(pkmID,form, db, pkm)         # ID
     pkm_get_national_id(pkmID, db, pkm)     # national id
@@ -385,11 +395,13 @@ def my_constructor(pkmID, form, db, pkm, generationID)
     pkm_get_gender(pkmID, db, pkm)          # Gender
     pkm_get_egg_cycles(pkmID, db, pkm)      # Egg Cycles
     pkm_get_form(pkmID, db, pkm)            # Form
-    pkm_get_dex_desc(pkmID, generationID, db, pkm)
+    pkm_get_dex_desc(pkmID, generationID, db, pkm)          # Dex description
+    pkm_get_location(pkmID, gen5_locations, generationID, db, pkm)
 end
 
 def save_to_mongo()
     dir = File.expand_path File.dirname(__FILE__)
+    gen5_locations = CSV.read(dir+"/pokedex-locations-bw.csv")
     jump = "\r\e[0K"    # That is return to beginning of line and use the
                         # ANSI clear command "\e" or "\003"
     # instanciate new pokemon
@@ -406,8 +418,8 @@ def save_to_mongo()
         generationID=i
         pkm.generation = generationID
         for i in 1..151 do
-            pkmID="#{i}"
-            my_constructor(pkmID, form, db, pkm, generationID)
+            pkmID=i
+            my_constructor(pkmID, form, db, pkm, generationID, gen5_locations)
             doc = pkm_object(pkm)
             print jump + "inserting Generation #{generationID} #{pkm.national_id} #{pkm.name} #{pkm.jname}"
             id = coll.insert(doc)
@@ -417,8 +429,8 @@ def save_to_mongo()
         generationID=i
         pkm.generation = generationID
         for i in 152..251 do
-            pkmID="#{i}"
-            my_constructor(pkmID, form, db, pkm, generationID)
+            pkmID=i
+            my_constructor(pkmID, form, db, pkm, generationID, gen5_locations)
             doc = pkm_object(pkm)
             print jump + "inserting Generation #{generationID} #{pkm.national_id} #{pkm.name} #{pkm.jname}"
             id = coll.insert(doc)
@@ -428,8 +440,8 @@ def save_to_mongo()
         generationID=i
         pkm.generation = generationID
         for i in 252..386 do
-            pkmID="#{i}"
-            my_constructor(pkmID, form, db, pkm, generationID)
+            pkmID=i
+            my_constructor(pkmID, form, db, pkm, generationID, gen5_locations)
             doc = pkm_object(pkm)
             print jump + "inserting Generation #{generationID} #{pkm.national_id} #{pkm.name} #{pkm.jname}"
             id = coll.insert(doc)
@@ -439,8 +451,8 @@ def save_to_mongo()
         generationID=i
         pkm.generation = generationID
         for i in 387..493 do
-            pkmID="#{i}"
-            my_constructor(pkmID, form, db, pkm, generationID)
+            pkmID=i
+            my_constructor(pkmID, form, db, pkm, generationID, gen5_locations)
             doc = pkm_object(pkm)
             print jump + "inserting Generation #{generationID} #{pkm.national_id} #{pkm.name} #{pkm.jname}"
             id = coll.insert(doc)
@@ -450,8 +462,8 @@ def save_to_mongo()
         generationID=i
         pkm.generation = generationID
         for i in 494..649 do
-            pkmID="#{i}"
-            my_constructor(pkmID, form, db, pkm, generationID)
+            pkmID=i
+            my_constructor(pkmID, form, db, pkm, generationID, gen5_locations)
             doc = pkm_object(pkm)
             print jump + "inserting Generation #{generationID} #{pkm.national_id} #{pkm.name} #{pkm.jname}"
             id = coll.insert(doc)
