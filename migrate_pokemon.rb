@@ -145,14 +145,16 @@ end
 def pkm_get_ability(pokemonId, db, pkm)
     x = 1
     abilities = Hash.new
-    rows = db.execute("SELECT abilities.identifier
+    rows = db.execute("SELECT pokemon_abilities.ability_id, abilities.identifier as ability_name
                         FROM pokemon INNER JOIN pokemon_abilities ON pokemon.id = pokemon_abilities.pokemon_id
                              INNER JOIN abilities ON pokemon_abilities.ability_id = abilities.id
-                        WHERE pokemon.id = #{pokemonId}") do |row|
-                abilities["ability_#{x}"] = row['identifier']
+                        WHERE pokemon.id = 1
+                        ORDER BY ability_name") do |row|
+                ability_id = row['ability_id']
+                abilities["#{ability_id}"] = row['ability_name']
                 x = x+1
             end
-    pkm.ability = abilities
+    pkm.abilities = abilities
 
 end
 
@@ -310,9 +312,11 @@ def pkm_object(pkm)
         :metadata=>{
             :name=>pkm.name,
             :jname=>pkm.jname,
+            :nationalId=>pkm.national_id,
             :generation=>pkm.generation,
             :height=>pkm.height,
             :weight=>pkm.weight,
+            :abilities=>pkm.abilities,
             # we don't want form if they don't have
             # multiple forms
             :form=>pkm.form,
@@ -327,7 +331,6 @@ def pkm_object(pkm)
             :specialAttack=>pkm.special_attack,
             :specialDefense=>pkm.special_defense,
             :speed=>pkm.speed,
-            :nationalId=>pkm.national_id,
             # we don't want chain if they don't evolve
             :dex_description=>pkm.dex_description
             

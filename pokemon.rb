@@ -12,7 +12,7 @@ class Pokemon
                   :special_defense,
                   :speed,
                   :type,
-                  :ability,
+                  :abilities,
                   :species,
                   :level_moves,
                   :hm_moves,
