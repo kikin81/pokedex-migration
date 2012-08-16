@@ -51,7 +51,7 @@ def pkm_get_name(pokemonId, db, pkm)
     pokemon_name = db.get_first_value("SELECT pokemon_species_names.name
                             FROM pokemon INNER JOIN pokemon_species_names ON pokemon.species_id = pokemon_species_names.pokemon_species_id
                             WHERE pokemon_species_names.local_language_id = 9
-                            AND pokemon.species_id = #{pokemonId}")
+                            AND pokemon.id = #{pokemonId}")
     # if we have a result
     pkm.name = pokemon_name
 end
@@ -63,6 +63,9 @@ def pkm_slug(pkm)
     when 32
         pkm.slug = 'nidoran-m'
     else
+        if pkm.name.nil?
+            puts pkm.inspect
+        end
         pkm.slug = pkm.name.downcase.strip.gsub(' ', '-').gsub(/[^\w-]/, '')
     end
 end
@@ -144,7 +147,7 @@ def pkm_get_ability(pokemonId, db, pkm)
     rows = db.execute("SELECT pokemon_abilities.ability_id, abilities.identifier as ability_name
                         FROM pokemon INNER JOIN pokemon_abilities ON pokemon.id = pokemon_abilities.pokemon_id
                              INNER JOIN abilities ON pokemon_abilities.ability_id = abilities.id
-                        WHERE pokemon.id = 1
+                        WHERE pokemon.id = #{pokemonId}
                         ORDER BY ability_name") do |row|
                 ability_id = row['ability_id']
                 abilities["#{ability_id}"] = row['ability_name']
@@ -351,17 +354,16 @@ def pkm_get_egg_cycles(pokemonId, db, pkm)
 end
 
 def pkm_get_form(pokemonId, db, pkm)
-    form = Hash.new
-    db.results_as_hash = true
-    db.execute("SELECT pokemon_forms.pokemon_id, pokemon_forms.form_identifier
+    row = db.get_first_value("SELECT pokemon_forms.form_identifier
                 FROM pokemon INNER JOIN pokemon_forms ON pokemon.id = pokemon_forms.pokemon_id
-                WHERE pokemon.species_id = #{pokemonId}") do |row|
-        end
+                WHERE pokemon.id = #{pokemonId}")
+    pkm.form = row
 end
 
 def pkm_get_location(pokemonId, gen5_locations, generationId, db, pkm)
     location = Hash.new
-    if(generationId == 5)
+    if(generationId == 5 && pokemonId <= 649)
+        puts "INSERTING"
         # National Dex #,Location Black,Location White,Location Black 2,Location White 2
         location["black"] = gen5_locations[pokemonId][1]
         location["white"] = gen5_locations[pokemonId][2]
@@ -408,6 +410,7 @@ def save_to_mongo()
     pkm = Pokemon.new()
     # new db connection
     db = SQLite3::Database.new( dir+"/pokemon-sqlite/pokedex.sqlite" )
+    #db = SQLite3::Database.new( "/Users/fvelazquez/Code/pokemondb/pokedex/pokedex/data/pokedex.sqlite" )
     # new mongo connection
     mongodb = Mongo::Connection.new.db("pokedex")
     coll = mongodb["pokemon"]
@@ -421,7 +424,7 @@ def save_to_mongo()
             pkmID=i
             my_constructor(pkmID, form, db, pkm, generationID, gen5_locations)
             doc = pkm_object(pkm)
-            print jump + "inserting Generation #{generationID} #{pkm.national_id} #{pkm.name} #{pkm.jname}"
+            #print jump + "inserting Generation #{generationID} #{pkm.national_id} #{pkm.name} #{pkm.jname}"
             id = coll.insert(doc)
         end
     end
@@ -432,7 +435,7 @@ def save_to_mongo()
             pkmID=i
             my_constructor(pkmID, form, db, pkm, generationID, gen5_locations)
             doc = pkm_object(pkm)
-            print jump + "inserting Generation #{generationID} #{pkm.national_id} #{pkm.name} #{pkm.jname}"
+            #print jump + "inserting Generation #{generationID} #{pkm.national_id} #{pkm.name} #{pkm.jname}"
             id = coll.insert(doc)
         end
     end
@@ -443,7 +446,7 @@ def save_to_mongo()
             pkmID=i
             my_constructor(pkmID, form, db, pkm, generationID, gen5_locations)
             doc = pkm_object(pkm)
-            print jump + "inserting Generation #{generationID} #{pkm.national_id} #{pkm.name} #{pkm.jname}"
+            #print jump + "inserting Generation #{generationID} #{pkm.national_id} #{pkm.name} #{pkm.jname}"
             id = coll.insert(doc)
         end
     end
@@ -454,7 +457,7 @@ def save_to_mongo()
             pkmID=i
             my_constructor(pkmID, form, db, pkm, generationID, gen5_locations)
             doc = pkm_object(pkm)
-            print jump + "inserting Generation #{generationID} #{pkm.national_id} #{pkm.name} #{pkm.jname}"
+            #print jump + "inserting Generation #{generationID} #{pkm.national_id} #{pkm.name} #{pkm.jname}"
             id = coll.insert(doc)
         end
     end
@@ -465,7 +468,20 @@ def save_to_mongo()
             pkmID=i
             my_constructor(pkmID, form, db, pkm, generationID, gen5_locations)
             doc = pkm_object(pkm)
-            print jump + "inserting Generation #{generationID} #{pkm.national_id} #{pkm.name} #{pkm.jname}"
+            #print jump + "inserting Generation #{generationID} #{pkm.national_id} #{pkm.name} #{pkm.jname}"
+            id = coll.insert(doc)
+        end
+    end
+
+    # for pokemon id 650...673
+    for i in 5..5 do
+        pkm.generation = 5
+        for i in 650..673
+            pkmID=i
+            my_constructor(pkmID, form, db, pkm, generationID, gen5_locations)
+            pkm_get_form(pkmID, db, pkm)
+            doc = pkm_object(pkm)
+            #print jump + "inserting Generation #{generationID} #{pkm.national_id} #{pkm.name} #{pkm.jname}"
             id = coll.insert(doc)
         end
     end

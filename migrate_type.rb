@@ -9,7 +9,7 @@ dir = File.expand_path File.dirname(__FILE__)
 type = Type.new()
 
 db = SQLite3::Database.new( dir+"/pokemon-sqlite/pokedex.sqlite" )
-
+#db = SQLite3::Database.new( "/Users/fvelazquez/Code/pokemondb/pokedex/pokedex/data/pokedex.sqlite" )
 
 
 def crazy_type_method(type, db)

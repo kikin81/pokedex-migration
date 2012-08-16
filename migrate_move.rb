@@ -69,6 +69,7 @@ def save_to_mongo()
     # new db connection
     dir = File.expand_path File.dirname(__FILE__)
     db = SQLite3::Database.new( dir+"/pokemon-sqlite/pokedex.sqlite" )
+    #db = SQLite3::Database.new( "/Users/fvelazquez/Code/pokemondb/pokedex/pokedex/data/pokedex.sqlite" )
     # new mongo connection
     mongodb = Mongo::Connection.new.db("pokedex")
     coll = mongodb["moves"]

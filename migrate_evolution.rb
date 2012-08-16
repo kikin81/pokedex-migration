@@ -8,7 +8,7 @@ dir = File.expand_path File.dirname(__FILE__)
 evolution = Evolution.new()
 
 db = SQLite3::Database.new( dir+"/pokemon-sqlite/pokedex.sqlite" )
-
+#db = SQLite3::Database.new( "/Users/fvelazquez/Code/pokemondb/pokedex/pokedex/data/pokedex.sqlite" )
 def crazy_evolution_method(evolution, db)
     jump = "\r\e[0K"
     mongodb = Mongo::Connection.new.db("pokedex")
