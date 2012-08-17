@@ -363,7 +363,6 @@ end
 def pkm_get_location(pokemonId, gen5_locations, generationId, db, pkm)
     location = Hash.new
     if(generationId == 5 && pokemonId <= 649)
-        puts "INSERTING"
         # National Dex #,Location Black,Location White,Location Black 2,Location White 2
         location["black"] = gen5_locations[pokemonId][1]
         location["white"] = gen5_locations[pokemonId][2]
@@ -424,7 +423,7 @@ def save_to_mongo()
             pkmID=i
             my_constructor(pkmID, form, db, pkm, generationID, gen5_locations)
             doc = pkm_object(pkm)
-            #print jump + "inserting Generation #{generationID} #{pkm.national_id} #{pkm.name} #{pkm.jname}"
+            print jump + "inserting Generation #{generationID} #{pkm.national_id} #{pkm.name} #{pkm.jname}"
             id = coll.insert(doc)
         end
     end
@@ -435,7 +434,7 @@ def save_to_mongo()
             pkmID=i
             my_constructor(pkmID, form, db, pkm, generationID, gen5_locations)
             doc = pkm_object(pkm)
-            #print jump + "inserting Generation #{generationID} #{pkm.national_id} #{pkm.name} #{pkm.jname}"
+            print jump + "inserting Generation #{generationID} #{pkm.national_id} #{pkm.name} #{pkm.jname}"
             id = coll.insert(doc)
         end
     end
@@ -446,7 +445,7 @@ def save_to_mongo()
             pkmID=i
             my_constructor(pkmID, form, db, pkm, generationID, gen5_locations)
             doc = pkm_object(pkm)
-            #print jump + "inserting Generation #{generationID} #{pkm.national_id} #{pkm.name} #{pkm.jname}"
+            print jump + "inserting Generation #{generationID} #{pkm.national_id} #{pkm.name} #{pkm.jname}"
             id = coll.insert(doc)
         end
     end
@@ -457,7 +456,7 @@ def save_to_mongo()
             pkmID=i
             my_constructor(pkmID, form, db, pkm, generationID, gen5_locations)
             doc = pkm_object(pkm)
-            #print jump + "inserting Generation #{generationID} #{pkm.national_id} #{pkm.name} #{pkm.jname}"
+            print jump + "inserting Generation #{generationID} #{pkm.national_id} #{pkm.name} #{pkm.jname}"
             id = coll.insert(doc)
         end
     end
@@ -468,7 +467,7 @@ def save_to_mongo()
             pkmID=i
             my_constructor(pkmID, form, db, pkm, generationID, gen5_locations)
             doc = pkm_object(pkm)
-            #print jump + "inserting Generation #{generationID} #{pkm.national_id} #{pkm.name} #{pkm.jname}"
+            print jump + "inserting Generation #{generationID} #{pkm.national_id} #{pkm.name} #{pkm.jname}"
             id = coll.insert(doc)
         end
     end
@@ -481,7 +480,7 @@ def save_to_mongo()
             my_constructor(pkmID, form, db, pkm, generationID, gen5_locations)
             pkm_get_form(pkmID, db, pkm)
             doc = pkm_object(pkm)
-            #print jump + "inserting Generation #{generationID} #{pkm.national_id} #{pkm.name} #{pkm.jname}"
+            print jump + "inserting Generation #{generationID} #{pkm.national_id} #{pkm.name} #{pkm.jname}"
             id = coll.insert(doc)
         end
     end
