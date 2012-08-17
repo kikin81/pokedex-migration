@@ -14,6 +14,7 @@ def move_metadata(db, move, coll)
                 FROM moves INNER JOIN move_damage_classes ON moves.damage_class_id = move_damage_classes.id
                      INNER JOIN types ON moves.type_id = types.id
                 WHERE moves.id < 10000") do |row|
+            # don't store veekun's id
             move.move_id = row['id']
             move.name = row['move_name']
             move.type=row['type']
