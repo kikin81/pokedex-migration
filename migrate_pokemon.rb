@@ -68,6 +68,11 @@ def pkm_slug(pkm)
         end
         pkm.slug = pkm.name.downcase.strip.gsub(' ', '-').gsub(/[^\w-]/, '')
     end
+
+    if pkm.form.nil?
+    else
+        pkm.slug += "-#{pkm.form}"
+    end
 end
 
 def pkm_get_jname(pokemonId, db, pkm)
@@ -362,12 +367,12 @@ end
 
 def pkm_get_location(pokemonId, gen5_locations, generationId, db, pkm)
     location = Hash.new
-    if(generationId == 5 && pokemonId <= 649)
+    if(generationId == 5 && pkm.national_id <= 649)
         # National Dex #,Location Black,Location White,Location Black 2,Location White 2
-        location["black"] = gen5_locations[pokemonId][1]
-        location["white"] = gen5_locations[pokemonId][2]
-        location["black2"] = gen5_locations[pokemonId][3]
-        location["white2"] = gen5_locations[pokemonId][4]
+        location["black"] = gen5_locations[pkm.national_id][1]
+        location["white"] = gen5_locations[pkm.national_id][2]
+        location["black2"] = gen5_locations[pkm.national_id][3]
+        location["white2"] = gen5_locations[pkm.national_id][4]
     else
         # pkm_get_veekun_location(pokemonId, generationId, db, pkm)
     end
@@ -378,6 +383,7 @@ def my_constructor(pkmID, form, db, pkm, generationID, gen5_locations)
 
     pkm_set_id(pkmID,form, db, pkm)         # ID
     pkm_get_national_id(pkmID, db, pkm)     # national id
+    pkm_get_form(pkmID, db, pkm)            # Form
     pkm_get_egg_group(pkmID, db, pkm)       # egg group
     pkm_get_height_weight(pkmID, db, pkm)   # Height/Weight
     pkm_get_name(pkmID, db, pkm)            # Name
@@ -395,7 +401,6 @@ def my_constructor(pkmID, form, db, pkm, generationID, gen5_locations)
     pkm_get_evyield(pkmID, db, pkm)         # EV Yield
     pkm_get_gender(pkmID, db, pkm)          # Gender
     pkm_get_egg_cycles(pkmID, db, pkm)      # Egg Cycles
-    pkm_get_form(pkmID, db, pkm)            # Form
     pkm_get_dex_desc(pkmID, generationID, db, pkm)          # Dex description
     pkm_get_location(pkmID, gen5_locations, generationID, db, pkm)
 end
