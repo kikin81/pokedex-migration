@@ -47,6 +47,7 @@ def move_description(move, row, db)
                      INNER JOIN version_groups ON move_flavor_text.version_group_id = version_groups.id
                      INNER JOIN versions ON versions.version_group_id = version_groups.id
                 WHERE moves.id = #{move.move_id}
+                AND move_flavor_text.language_id = 9
                 GROUP BY version_groups.id") do |row|
             case row['group_id']
             when 3 # g/s/c
