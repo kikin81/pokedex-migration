@@ -71,7 +71,7 @@ def pkm_slug(pkm)
 
     if pkm.form.nil?
     else
-        pkm.slug += "-#{pkm.form}"
+        #pkm.slug += "-#{pkm.form}"
     end
 end
 
