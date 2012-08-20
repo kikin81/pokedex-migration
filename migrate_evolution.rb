@@ -156,7 +156,7 @@ def crazy_how_method(evolution, row, db)
     case party_species = row['party_species_id']
     when nil
     when 223
-        evolution_method += "with Remoraid in the party"
+        evolution_method += " with Remoraid in the party"
     end
     # trade
     case trade_species = row['trade_species_id']
