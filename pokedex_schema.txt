@@ -88,16 +88,32 @@ moves
 evolutions
 
 {
-    "evolutionChainID" : "chainID"
-    "from" : "someOtherId",
-    "to" : "anotherId",
-    "how":  "level 16"
+    "evolutionChain" : 10
+    "from" : 172
+    "fromName" : "pichu",
+    "to" : 25,
+    "toName":  "pikachu",
+    "how": "Level up Max Happiness"
 }
 
-attacks
+types
 
 {
-    "attack":"water",
-    "defense" : "fire",
-    "damage": 1.25
+    "dark": 100,
+    "normal": 100,
+    "fighting": 100,
+    "flying": 50,
+    "poison": 100,
+    "ground": 200,
+    "rock": 100,
+    "bug": 100,
+    "ghost": 100,
+    "steel": 50,
+    "fire": 100,
+    "water": 100,
+    "grass": 100,
+    "electric": 50,
+    "psychic": 100,
+    "ice": 100,
+    "dragon": 100
 }

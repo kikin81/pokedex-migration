@@ -490,6 +490,55 @@ def save_to_mongo()
         end
     end
     puts "\n\tTotal documents saved to pokemon collection => #{coll.count}"
+    
+    puts "\n\tAdding our special guests..."
+    guestPkm1 = Pokemon.new()
+    guestPkm2 = Pokemon.new()
+
+    add_first_guest(guestPkm1)
+    add_second_guest(guestPkm2)
+
+    doc = pkm_object(guestPkm1)
+    puts "doc: #{doc}"
+    id = coll.insert(doc)
+    doc = pkm_object(guestPkm2)
+    puts "doc: #{doc}"
+    id = coll.insert(doc)
+
+end
+
+def add_first_guest(pkm)
+
+types = Hash.new
+types["type_1"] = "fire"
+pkm.name = "Manish"
+pkm.slug = "manish"
+pkm.generation = 5
+pkm.hp = 1000
+pkm.attack = 255
+pkm.defense = 255
+pkm.special_attack = 255
+pkm.special_defense = 255
+pkm.speed = 255
+pkm.national_id = 650
+pkm.type = types
+end
+
+def add_second_guest(pkm)
+
+types = Hash.new
+types["type_1"] = "grass"
+pkm.name = "Nick"
+pkm.slug = "nick"
+pkm.generation = 5
+pkm.hp = 100
+pkm.attack = 1
+pkm.defense = 1
+pkm.special_attack = 1
+pkm.special_defense = 1
+pkm.speed = 1
+pkm.national_id = 651
+pkm.type = types
 end
 
 save_to_mongo()
