@@ -140,7 +140,7 @@ def crazy_how_method(evolution, row, db)
     case beauty = row['minimum_beauty']
     when nil
     else
-        evolution_method += "beauty"
+        evolution_method += " beauty"
     end
     # stats
     case stats = row['relative_physical_stats']
