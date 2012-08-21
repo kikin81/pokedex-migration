@@ -478,17 +478,17 @@ def save_to_mongo()
     end
 
     # for pokemon id 650...673
-    for i in 5..5 do
-        pkm.generation = 5
-        for i in 650..673
-            pkmID=i
-            my_constructor(pkmID, form, db, pkm, generationID, gen5_locations)
-            pkm_get_form(pkmID, db, pkm)
-            doc = pkm_object(pkm)
-            print jump + "inserting Generation #{generationID} #{pkm.national_id} #{pkm.name} #{pkm.jname}"
-            id = coll.insert(doc)
-        end
-    end
+    #for i in 5..5 do
+    #    pkm.generation = 5
+    #    for i in 650..673
+    #        pkmID=i
+    #        my_constructor(pkmID, form, db, pkm, generationID, gen5_locations)
+    #        pkm_get_form(pkmID, db, pkm)
+    #        doc = pkm_object(pkm)
+    #        print jump + "inserting Generation #{generationID} #{pkm.national_id} #{pkm.name} #{pkm.jname}"
+    #        id = coll.insert(doc)
+    #    end
+    #end
     puts "\n\tTotal documents saved to pokemon collection => #{coll.count}"
     
     #puts "\n\tAdding our special guests..."
