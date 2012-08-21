@@ -491,19 +491,19 @@ def save_to_mongo()
     end
     puts "\n\tTotal documents saved to pokemon collection => #{coll.count}"
     
-    puts "\n\tAdding our special guests..."
-    guestPkm1 = Pokemon.new()
-    guestPkm2 = Pokemon.new()
+    #puts "\n\tAdding our special guests..."
+    #guestPkm1 = Pokemon.new()
+    #guestPkm2 = Pokemon.new()
 
-    add_first_guest(guestPkm1)
-    add_second_guest(guestPkm2)
+    #add_first_guest(guestPkm1)
+    #add_second_guest(guestPkm2)
 
-    doc = pkm_object(guestPkm1)
-    puts "doc: #{doc}"
-    id = coll.insert(doc)
-    doc = pkm_object(guestPkm2)
-    puts "doc: #{doc}"
-    id = coll.insert(doc)
+    #doc = pkm_object(guestPkm1)
+    #puts "doc: #{doc}"
+    #id = coll.insert(doc)
+    #doc = pkm_object(guestPkm2)
+    #puts "doc: #{doc}"
+    #id = coll.insert(doc)
 
 end
 
